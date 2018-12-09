@@ -1,0 +1,7 @@
+function [est_qual] = estimation_quality(psd_y1, psd_y2, freq1, freq2)
+    
+    res = 1000;
+    res_vec = linspace(1,
+    integrand = 10*log(psd_
+end
+

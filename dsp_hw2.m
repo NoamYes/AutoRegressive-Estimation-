@@ -28,3 +28,10 @@ ylabel('Magnitude');
 
 % Estimation Quality
 
+est_qual1 = estimation_quality(psd, psd_hat, freq, freq_hat);
+
+%% Section 3
+
+H = tf(b,a, 0.1, 'variable', 'z^-1');
+figure()
+bode(H);

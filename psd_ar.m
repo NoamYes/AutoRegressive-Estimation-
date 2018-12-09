@@ -1,4 +1,4 @@
-function [freq, psd] = psd_ar(p, y, b)
+function [freq, psd, est_qual] = psd_ar(p, y, b)
 
     frame = y(1000:1511);
     [a_hat,e,k] = levinson(autocorr(frame),p);
@@ -8,11 +8,9 @@ function [freq, psd] = psd_ar(p, y, b)
     psd = 20*log(abs(fft(y_hat)).^2);
     [~, freq] = freqz(b,a_hat,length(psd));
 
-    % figure()
-    % plot(freq_hat,psd_hat);
-    % title('Power Spectrum Destiny of y');
-    % xlabel('Frequency');
-    % ylabel('Magnitude');
+    % estimation quality
+    
+    
 
 
 end
