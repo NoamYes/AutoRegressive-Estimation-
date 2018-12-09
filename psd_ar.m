@@ -1,8 +1,9 @@
-function [freq, psd, est_qual] = psd_ar(p, y, b)
+function [freq, psd, sys] = psd_ar(p, y, b)
 
     frame = y(1000:1511);
     [a_hat,e,k] = levinson(autocorr(frame),p);
-    %sys_hat = zpk([],a_hat, 1);
+    [z,p,k] = tf2zp(b,a_hat);
+    sys = zpk(z,p, 1);
     noise = randn(1,10000);
     y_hat = filter(b,a_hat,noise);
     psd = 20*log(abs(fft(y_hat)).^2);
