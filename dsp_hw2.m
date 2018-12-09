@@ -17,16 +17,14 @@ xlabel('Frequency[Rad/Sec]');
 ylabel('Magnitude[dB]');
 
 %% Section 2
+
 p = 4;
-frame = y(1000:1511);
-[a_hat,e,k] = levinson(autocorr(frame),p);
-sys_hat = zpk([],a_hat, 1);
-y_hat = filter(b,a_hat,noise);
-psd_hat = 20*log(abs(fft(y_hat)).^2);
-[~, freq_hat] = freqz(b,a_hat,length(psd_hat));
+[freq_hat,psd_hat] = psd_ar(p,y, b);
 figure(2)
 plot(freq_hat,psd_hat);
 title('Power Spectrum Destiny of y');
 xlabel('Frequency');
 ylabel('Magnitude');
+
+% Estimation Quality
 
