@@ -1,4 +1,4 @@
-function [freq, psd, sys] = psd_ar(p, y, b)
+function [freq, amp_hat, sys] = psd_ar(p, y, b)
 
     frame = y(1000:1511);
     [a_hat,e,k] = levinson(autocorr(frame),p);
@@ -6,10 +6,9 @@ function [freq, psd, sys] = psd_ar(p, y, b)
     sys = zpk(z,p, 1);
     noise = randn(1,10000);
     y_hat = filter(b,a_hat,noise);
-    psd = 20*log(abs(fft(y_hat)).^2);
-    [~, freq] = freqz(b,a_hat,length(psd));
+    psd = fft(xcorr(y_hat));
+    [amp_hat, freq] = freqz(b,a_hat,length(psd));
 
-    % estimation quality
     
     
 
