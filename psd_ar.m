@@ -7,7 +7,7 @@ function [freq, amp_hat, sys] = psd_ar(p, y, b)
     noise = randn(1,10000);
     y_hat = filter(b,a_hat,noise);
     psd = fft(xcorr(y_hat));
-    [amp_hat, freq] = freqz(b,a_hat,length(psd));
+    [amp_hat, freq] = freqz(b,a_hat,1e3);
 
     
     

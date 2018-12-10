@@ -6,14 +6,12 @@ figure(1);
 pzmap(sys)
 title('zeros - poles map of original transfer function - none zeros');
 hold on;
-[b,a] = zp2tf([],[-0.6+0.6i , -0.6-0.6i , 0.68+0.62i , 0.68-0.62i], 1);
 
-H = tf(b,a, 0.1, 'variable', 'z^-1');
 
-noise = randn(1,10000);
-y = filter(b,a,noise);
-psd = fft(xcorr(y));
-[psd1, freq] = freqz(b,a,length(psd));
+H = tf(sys);
+a1 = cell2mat(H.Denominator);
+b1 = cell2mat(H.Numerator);
+[psd1, freq] = freqz(b1,a1,1e3);
 figure(2)
 plot((freq),db(psd1));
 hold on;
@@ -21,11 +19,13 @@ hold on;
 %% Section 2
 
 p = 4;
-[freq_hat,psd_hat, sys_hat] = psd_ar(p,y, b);
+noise = randn(1,10000);
+y1 = filter(b1,a1,noise);
+[freq_hat,psd_hat, sys_hat] = psd_ar(p,y1, b1);
 figure(1)
 pzmap(sys_hat);
 figure(2)
-plot(freq_hat,db(psd1));
+plot(freq_hat,db(psd_hat));
 title('Power Spectrum Destiny of therotical y1 vs estimated y1');
 xlabel('Frequency');
 ylabel('Magnitude[dB]');
@@ -36,16 +36,16 @@ est_qual1 = estimation_quality(psd1, psd_hat, freq, freq_hat);
 
 %% Section 3
 
-sys1 = zpk(0.9,[-0.6+0.6i , -0.6-0.6i , 0.68+0.62i , 0.68-0.62i], 1);
+sys2 = zpk(0.9,[-0.6+0.6i , -0.6-0.6i , 0.68+0.62i , 0.68-0.62i], 1);
 figure(3)
-pzmap(sys1)
+pzmap(sys2)
 title('Zeros- Poles map of transfer with zero at z=0.9');
-[b2,a2] = zp2tf(0.9,[-0.6+0.6i , -0.6-0.6i , 0.68+0.62i , 0.68-0.62i], 1);
 
-H2 = tf(b,a, 0.1, 'variable', 'z^-1');
+H2 = tf(sys2);
+a2 = cell2mat(H.Denominator);
+b2 = cell2mat(H.Numerator);
+[psd2, freq] = freqz(b2,a2,1e3);
 
-noise = randn(1,10000);
-y2 = filter(b2,a2,noise);
 
 %% Section 4
 
