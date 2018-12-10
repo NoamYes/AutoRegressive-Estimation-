@@ -1,6 +1,6 @@
-function [freq, amp_hat, sys] = psd_ar(p, y, b)
+function [freq, amp_hat, sys] = psd_ar(p, y, b, N)
 
-    frame = y(1000:1511);
+    frame = y(1000:1000+N);
     [a_hat,e,k] = levinson(autocorr(frame),p);
     a_hat(e<0) = [];
     [z,p,k] = tf2zp(b,a_hat);
