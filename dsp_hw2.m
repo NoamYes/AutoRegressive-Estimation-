@@ -21,7 +21,7 @@ hold on;
 p = 4;
 noise = randn(1,10000);
 y1 = filter(b1,a1,noise);
-[freq_hat,psd_hat, sys_hat] = psd_ar(p,y1, b1);
+[freq_hat,psd_hat, sys_hat] = psd_ar(p,y1, b1, 512);
 figure(1)
 pzmap(sys_hat);
 figure(2)
@@ -54,7 +54,7 @@ hold on;
 
 noise = randn(1,10000);
 y2 = filter(b2,a2,noise);
-[freq_hat2,psd_hat2, sys_hat2] = psd_ar(p,y2, 1);
+[freq_hat2,psd_hat2, sys_hat2] = psd_ar(p,y2, 1, 512);
 est_qual2 = estimation_quality(psd2, psd_hat2, freq2, freq_hat2);
 plot(freq_hat2,db(psd_hat2));
 title(['Power Spectrum Destiny of therotical y2 vs estimated y2 (zero inserted), Q=' num2str(est_qual2)]);
@@ -71,12 +71,42 @@ b3=b2; a3=a2;
 p=12;
 noise = randn(1,10000);
 y3 = filter(b3,a3,noise);
-[freq_hat3,psd_hat3, sys_hat3] = psd_ar(p,y3, 1);
+[freq_hat3,psd_hat3, sys_hat3] = psd_ar(p,y3, 1, 512);
 est_qual3 = estimation_quality(psd2, psd_hat3, freq2, freq_hat3);
 plot(freq_hat3,db(psd_hat3));
 title(['Power Spectrum Destiny of therotical y2 vs estimated y2 (zero inserted, p=12), Q=' num2str(est_qual2)]);
 xlabel('Frequency');
 ylabel('Magnitude[dB]');
 
+%% Section 6
+b3=b2; a3=a2;
+noise = randn(1,10000);
+y3 = filter(b3,a3,noise);
+p = 4:1:60;
+err = zeros(size(p));
+
+for i=1:length(p)
+    [freq_hatp,psd_hatp, sys_hatp] = psd_ar(p(i),y3, 1, 4096);
+    est_qualp = estimation_quality(psd2, psd_hatp, freq2, freq_hatp);
+    err(i) = est_qualp;
+end
+
+figure(6);
+plot(p,err, 12, est_qual3, '*');
+
+[min_err, idx] = min(err);
+
+
+
+p = idx;
+
+[freq_hat_min,psd_hat_min, sys_hat_min] =  psd_ar(p,y3, 1, 4096);
+figure(7)
+pzmap(sys_hat_min);
+figure(8)
+plot(freq_hat,db(psd_hat_min));
+title(['Power Spectrum Destiny of therotical y1 vs estimated y1 Q=' num2str(min_err)]);
+xlabel('Frequency');
+ylabel('Magnitude[dB]');
 
 
