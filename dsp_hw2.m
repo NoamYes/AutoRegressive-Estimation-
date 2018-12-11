@@ -82,7 +82,7 @@ ylabel('Magnitude[dB]');
 b3=b2; a3=a2;
 noise = randn(1,10000);
 y3 = filter(b3,a3,noise);
-p = 4:1:60;
+p = 4:2:60;
 err = zeros(size(p));
 
 for i=1:length(p)
@@ -98,15 +98,48 @@ plot(p,err, 12, est_qual3, '*');
 
 
 
-p = idx;
+p = p(idx);
 
 [freq_hat_min,psd_hat_min, sys_hat_min] =  psd_ar(p,y3, 1, 4096);
 figure(7)
 pzmap(sys_hat_min);
 figure(8)
 plot(freq_hat,db(psd_hat_min));
-title(['Power Spectrum Destiny of therotical y1 vs estimated y1 Q=' num2str(min_err)]);
+title({['Power Spectrum Destiny of therotical y1 vs estimated y1 Q=' num2str(min_err)] ; ...
+ ['p=' num2str(p) ' order of minimum Q']});
 xlabel('Frequency');
 ylabel('Magnitude[dB]');
 
+%% Section 7
 
+figure(9)
+sgtitle('Power Spectrum Destiny of therotical y2 vs non-parametric estimated y2')
+plot_count = 0;
+x = y3;
+
+for Window = ["Ham", "Rect"]
+    for L = [64,256]
+        for overlap = [0 0.5]
+            for samples = [512 4096]
+                 plot_count = plot_count + 1;
+                 x_ = y3(1000:1000+samples);
+                 if (strcmp(Window, 'Hamming'))
+                    window = hamming(L);
+                 else
+                    window = L; 
+                 end
+                 noverlap = floor(overlap*L);
+                 [pxx,freq] = pwelch(x,window,noverlap, L);
+                 subplot(4,4,plot_count)
+                 plot(freq, db(pxx))
+                 hold on;
+                 plot((freq2),db(psd2));
+                 title([char(Window) ', ' num2str(L) ', ' num2str(overlap) ', '  num2str(samples)]);
+                
+                xlabel('Frequency');
+                ylabel('Magnitude[dB]');
+                    
+            end 
+        end
+    end
+end
