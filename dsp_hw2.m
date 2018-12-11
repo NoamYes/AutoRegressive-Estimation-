@@ -26,6 +26,7 @@ figure(1)
 pzmap(sys_hat);
 figure(2)
 plot(freq_hat,db(psd_hat));
+legend('real', 'estimated');
 est_qual1 = estimation_quality(psd1, psd_hat, freq, freq_hat);
 title(['Power Spectrum Destiny of therotical y1 vs estimated y1 Q=' num2str(est_qual1)]);
 xlabel('Frequency');
@@ -57,6 +58,7 @@ y2 = filter(b2,a2,noise);
 [freq_hat2,psd_hat2, sys_hat2] = psd_ar(p,y2, 1, 512);
 est_qual2 = estimation_quality(psd2, psd_hat2, freq2, freq_hat2);
 plot(freq_hat2,db(psd_hat2));
+legend('real', 'estimated');
 title(['Power Spectrum Destiny of therotical y2 vs estimated y2 (zero inserted), Q=' num2str(est_qual2)]);
 xlabel('Frequency');
 ylabel('Magnitude[dB]');
@@ -74,6 +76,7 @@ y3 = filter(b3,a3,noise);
 [freq_hat3,psd_hat3, sys_hat3] = psd_ar(p,y3, 1, 512);
 est_qual3 = estimation_quality(psd2, psd_hat3, freq2, freq_hat3);
 plot(freq_hat3,db(psd_hat3));
+legend('real', 'estimated');
 title(['Power Spectrum Destiny of therotical y2 vs estimated y2 (zero inserted, p=12), Q=' num2str(est_qual2)]);
 xlabel('Frequency');
 ylabel('Magnitude[dB]');
@@ -93,7 +96,9 @@ end
 
 figure(6);
 plot(p,err, 12, est_qual3, '*');
-
+title('Q value vs order p');
+xlabel('p');
+ylabel('Q val');
 [min_err, idx] = min(err);
 
 
