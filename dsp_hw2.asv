@@ -116,7 +116,7 @@ figure(9)
 sgtitle('Power Spectrum Destiny of therotical y2 vs non-parametric estimated y2')
 plot_count = 0;
 x = y3;
-
+Q = zeros(1,16);
 for Window = ["Ham", "Rect"]
     for L = [64,256]
         for overlap = [0 0.5]
@@ -131,14 +131,16 @@ for Window = ["Ham", "Rect"]
                  noverlap = floor(overlap*L);
                  [pxx,freq] = pwelch(x,window,noverlap, L);
                  subplot(4,4,plot_count)
-                 plot(freq, pxx)
+                 plot(freq, db(pxx))
                  hold on;
                  plot((freq2),db(psd2));
-                 title({Window, ', ', num2str(L), ', ', num2str(overlap), ', ', num2str(samples)});
+                 title([char(Window) ', ' num2str(L) ', ' num2str(overlap) ', '  num2str(samples)]);
                 
                 xlabel('Frequency');
                 ylabel('Magnitude[dB]');
-                    
+                
+                Q = estimation_quality(psd2, pxx, freq2, freq);
+                Q(plot_count) =     
             end 
         end
     end
